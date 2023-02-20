@@ -37,41 +37,21 @@ enum CAPTURE_PROPETIES
 
 /* Sets up the ESCAPI DLL and the function pointers below. Call this first! */
 /* Returns number of capture devices found (same as countCaptureDevices, below) */
-extern int setupESCAPI();
+int setupESCAPI();
+struct SimpleCapParams gParams[];
+int gDoCapture[];
+int gOptions[];
 
-/* return the number of capture devices found */
-typedef int (*countCaptureDevicesProc)();
-
-/* initCapture tries to open the video capture device. 
- * Returns 0 on failure, 1 on success. 
- * Note: Capture parameter values must not change while capture device
- *       is in use (i.e. between initCapture and deinitCapture).
- *       Do *not* free the target buffer, or change its pointer!
- */
-typedef int (*initCaptureProc)(unsigned int deviceno, struct SimpleCapParams *aParams);
-
-/* deinitCapture closes the video capture device. */
-typedef void (*deinitCaptureProc)(unsigned int deviceno);
-
-/* doCapture requests video frame to be captured. */
-typedef void (*doCaptureProc)(unsigned int deviceno);
-
-/* isCaptureDone returns 1 when the requested frame has been captured.*/
-typedef int (*isCaptureDoneProc)(unsigned int deviceno);
-
-/* Get the user-friendly name of a capture device. */
-typedef void (*getCaptureDeviceNameProc)(unsigned int deviceno, char *namebuffer, int bufferlength);
-
-/* Returns the ESCAPI DLL version. 0x200 for 2.0 */
-typedef int (*ESCAPIVersionProc)();
-
-/* 
-	On properties -
-	- Not all cameras support properties at all.
-	- Not all properties can be set to auto.
-	- Not all cameras support all properties.
-	- Messing around with camera properties may lead to weird results, so YMMV.
-*/
+HRESULT InitDevice(int device);
+void CleanupDevice(int device);
+int CountCaptureDevices();
+void GetCaptureDeviceName(int deviceno, char * namebuffer, int bufferlength);
+void CheckForFail(int device);
+int GetErrorCode(int device);
+int GetErrorLine(int device);
+float GetProperty(int device, int prop);
+int GetPropertyAuto(int device, int prop);
+int SetProperty(int device, int prop, float value, int autoval);
 
 /* Gets value (0..1) of a camera property (see CAPTURE_PROPERTIES, above) */
 typedef float (*getCapturePropertyValueProc)(unsigned int deviceno, int prop);
@@ -98,23 +78,6 @@ typedef int (*initCaptureWithOptionsProc)(unsigned int deviceno, struct SimpleCa
 
 // Options accepted by above:
 // Return raw data instead of converted rgb. Using this option assumes you know what you're doing.
-#define CAPTURE_OPTION_RAWDATA 1 
+#define CAPTURE_OPTION_RAWDATA 0
 // Mask to check for valid options - all options OR:ed together.
 #define CAPTURE_OPTIONS_MASK (CAPTURE_OPTION_RAWDATA) 
-
-
-#ifndef ESCAPI_DEFINITIONS_ONLY
-extern countCaptureDevicesProc countCaptureDevices;
-extern initCaptureProc initCapture;
-extern deinitCaptureProc deinitCapture;
-extern doCaptureProc doCapture;
-extern isCaptureDoneProc isCaptureDone;
-extern getCaptureDeviceNameProc getCaptureDeviceName;
-extern ESCAPIVersionProc ESCAPIVersion;
-extern getCapturePropertyValueProc getCapturePropertyValue;
-extern getCapturePropertyAutoProc getCapturePropertyAuto;
-extern setCapturePropertyProc setCaptureProperty;
-extern getCaptureErrorLineProc getCaptureErrorLine;
-extern getCaptureErrorCodeProc getCaptureErrorCode;
-extern initCaptureWithOptionsProc initCaptureWithOptions;
-#endif

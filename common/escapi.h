@@ -1,4 +1,9 @@
 /* Extremely Simple Capture API */
+#pragma once
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
+#include <mferror.h>
 
 struct SimpleCapParams
 {
@@ -52,6 +57,15 @@ int GetErrorLine(int device);
 float GetProperty(int device, int prop);
 int GetPropertyAuto(int device, int prop);
 int SetProperty(int device, int prop, float value, int autoval);
+void initCOM();
+
+
+int initCapture(unsigned int deviceno, struct SimpleCapParams *aParams);
+void deinitCapture(unsigned int deviceno);
+void  doCapture(unsigned int deviceno);
+int  isCaptureDone(unsigned int deviceno);
+
+
 
 /* Gets value (0..1) of a camera property (see CAPTURE_PROPERTIES, above) */
 typedef float (*getCapturePropertyValueProc)(unsigned int deviceno, int prop);

@@ -18,6 +18,15 @@
 #include "videobufferlock.h"
 #include "choosedeviceparam.h"
 
+// I do not know how these work! -Meowses
+#pragma comment(lib, "mf")
+#pragma comment(lib, "mfplat")
+#pragma comment(lib, "mfreadwrite")
+#pragma comment(lib, "mfuuid")
+
+// Random shot in the dark: needed for QISearch
+#pragma comment(lib, "shlwapi")
+
 extern struct SimpleCapParams gParams[];
 extern int gDoCapture[];
 extern int gOptions[];

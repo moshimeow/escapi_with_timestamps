@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "escapi.h"
+#include <iostream>
 
 // countCaptureDevicesProc countCaptureDevices;
 // initCaptureProc initCapture;
@@ -17,8 +18,8 @@
 
 
 /* Internal: initialize COM */
-typedef void (*initCOMProc)();
-initCOMProc initCOM;
+// typedef void (*initCOMProc)();
+// initCOMProc initCOM;
 
 int setupESCAPI()
 {
@@ -66,9 +67,10 @@ int setupESCAPI()
   //   return 0;
 
   /* Initialize COM.. */
+  std::cout << "Initializing COM" << std::endl;
   initCOM();
 
   /* and return the number of capture devices found. */
-  return countCaptureDevices();
+  return CountCaptureDevices();
 }
 
